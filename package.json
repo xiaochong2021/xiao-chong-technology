@@ -1,0 +1,48 @@
+{
+  "name": "xiao-chong-technology",
+  "version": "0.2.2",
+  "description": "晓蟲技术为家人，家族提供力所能及的技术支持",
+  "productName": "晓蟲技术支持",
+  "author": "晓蟲 <a811159720@qq.com>",
+  "private": true,
+  "scripts": {
+    "dev": "quasar dev",
+    "dev:electron": "chcp 65001&&quasar dev -m electron",
+    "build": "quasar build",
+    "build:electron": "quasar build -m electron",
+    "build:pwa": "quasar build -m pwa",
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.21.1",
+    "pinia": "^2.0.11",
+    "quasar": "^2.6.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz"
+  },
+  "devDependencies": {
+    "@quasar/app-vite": "^1.0.0",
+    "@types/node": "^12.20.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "@vue/devtools": "^6.4.5",
+    "autoprefixer": "^10.4.2",
+    "electron": "^22.0.0",
+    "electron-builder": "^22.4.0",
+    "electron-packager": "^15.2.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.4"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}
