@@ -4,5 +4,11 @@ export interface RegParseModel {
   regColumnSelect: number,
   contentColumnSelect: number,
   logicCode: string
-  splitText?: string
+  splitText?: string,
+  isFilterUserName: boolean,
+  isFilterTopic: boolean,
+  isFilterSpecTopic: boolean,
+  isCaseSensitive: boolean,
+  isFilterEmoticon: boolean,
+  isFilterURL: boolean,
 }

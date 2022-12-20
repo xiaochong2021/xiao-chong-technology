@@ -49,7 +49,7 @@ function matchTextItem(searchText: string, config: RegParseModel, regSheet: XLSX
         if (!regLogicMap.has(regNum)) {
           const regAddr = XLSX.utils.encode_col(Number.parseInt(regNum)) + XLSX.utils.encode_row(regRowStart);
           const regCell = regSheet[regAddr];
-          regLogicMap.set(regNum, new RegExp(regCell.v, 'i').test(searchTextItem));
+          regLogicMap.set(regNum, new RegExp(regCell.v, config.isCaseSensitive ? 'i' : '').test(searchTextItem));
         }
       });
       const transformRegLogicCode = regStrList.map(regStr => {
@@ -99,7 +99,6 @@ export function postRenderMessage(messageWindow: BrowserWindow) {
     const contentColEndNext = contentRange.e.c + 1;
     const regNumList = config.logicCode.match(/\d+/g); //对逻辑码表的数字进行切分
     const regStrList = config.logicCode.split(/\b(?=\d+)|(?<=\d+)\b/); //对逻辑码表的所有字符进行切分
-    // const exportData = [];
     for(;contentRowStart <= contentRowEnd; contentRowStart++) {
       if (contentRowStart === 0) {
         // 第一行为表头，在最后一列添加正则命中问题
@@ -107,17 +106,31 @@ export function postRenderMessage(messageWindow: BrowserWindow) {
         continue;
       }
       const contentAddr = XLSX.utils.encode_col(config.contentColumnSelect) + XLSX.utils.encode_row(contentRowStart);
-      const content = contentSheet[contentAddr]?.v;
+
+      let content = contentSheet[contentAddr]?.v;
+      if (config.isFilterUserName) { // 剔除@用户名
+        content = content.replace(/@[\u4e00-\u9fa5a-zA-Z0-9_-]{4,30}/g, '');
+      }
+      if (config.isFilterTopic) { // 剔除#话题#
+          content = content.replace(/#([^#]+)#/g, '');
+      }
+      if (config.isFilterSpecTopic) { // 剔除#特殊格式话题
+        content = content.replace(/#\S+/g, '');
+      }
+      if (config.isFilterEmoticon) { // 剔除表情
+        content = content.replace(/\[[^\[\]]+\]/g, '');
+      }
+      if (config.isFilterURL) { // 剔除链接
+        content = content.replace(/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/g, '');
+      }
       const resultStr = matchTextItem(content, config, regSheet, regNumList as RegExpMatchArray, regStrList);
       contentSheetAdd(contentSheet, contentRowStart, contentColEndNext, resultStr);
-      // exportData.push({'文本内容': content, '命中问题': resultStr});
       const progressRate = contentRowStart/contentRowEnd;
       messageWindow.setProgressBar(progressRate);
       messageWindow?.webContents.send('updateState', {state: 'doing', progress: (progressRate*100).toPrecision(2)});
     }
     messageWindow.setProgressBar(0);
     messageWindow?.webContents.send('updateState', {state: 'done', progress: '100'});
-    // const resultWs = XLSX.utils.json_to_sheet(exportData);
     const resultWb = XLSX.utils.book_new();
     const range = contentSheet['!ref']?.split(':') || [];
     if (range.length > 0) {

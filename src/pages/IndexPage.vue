@@ -78,7 +78,43 @@
               </ol>
             </template>
           </q-field>
-          <q-checkbox v-model="isSplit" label="是否启用分割字符"/>
+          <q-toggle
+            v-model="isCaseSensitive"
+            label="区分大小写"
+            color="green"
+          />
+          <q-toggle
+            v-model="isFilterEmoticon"
+            label="剔除[表情]"
+            color="orange"
+          />
+          <q-toggle
+            v-model="isFilterURL"
+            label="剔除链接"
+            color="pink"
+          />
+          <q-toggle
+            v-model="isFilterUserName"
+            label="剔除@用户名"
+            color="purple" l
+          />
+          <q-toggle
+            v-model="isFilterTopic"
+            label="剔除#话题#"
+            color="lightBlue"
+            @update:model-value="val => topicFilterChange(val, 'isFilterTopic')"
+          />
+          <q-toggle
+            v-model="isFilterSpecTopic"
+            label="剔除#特殊格式话题 "
+            color="red"
+            @update:model-value="val => topicFilterChange(val, 'isFilterSpecTopic')"
+          />
+          <q-toggle
+            v-model="isSplit"
+            label="启用分割字符"
+            color="primary"
+          />
           <q-input
             v-if="isSplit"
             v-model.trim="splitText"
@@ -91,7 +127,8 @@
             lazy-rules
             :rules="[
               val => !!val || '逻辑码表不能为空',
-              val => validLogicCode(val) || '语法错误，请检查。列如: 2 && !(3 && 4)'
+              val => validLogicCode(val) || '语法错误，请检查。列如: 2 && !(3 && 4)',
+              val => validLogicCodeIndex(val) || '数字索引超出范围'
             ]"
             hint="请使用数字索引、英文括号、“&&”表示“与”，“||”表示“或”，“!”表示“非”"
           />
@@ -136,9 +173,27 @@ import { QStepper } from 'quasar';
 
 const step = ref(1);
 const isSplit = ref(true);
+const isFilterUserName = ref(true);
+const isFilterTopic = ref(true);
+const isFilterSpecTopic = ref(false);
+const isCaseSensitive = ref(true);
+const isFilterEmoticon = ref(true);
+const isFilterURL = ref(true);
 const splitText = ref('，');
 const logicCode = ref('');
 
+// 话题过滤器变换
+const topicFilterChange = (val:boolean, filed:string) => {
+  if (val) {
+    if(filed === 'isFilterTopic') {
+      isFilterSpecTopic.value = false;
+    } else {
+      isFilterTopic.value = false;
+    }
+  }
+}
+
+//校验语法正确
 const validLogicCode = (val: string) => {
   const replaceCodeStr = val.replace(/\d+/g, 'true');
   try {
@@ -146,6 +201,16 @@ const validLogicCode = (val: string) => {
     return typeof pass === 'boolean';
   } catch (e) {
     return false;
+  }
+}
+
+//校验是否索引越界
+const validLogicCodeIndex = (val: string) => {
+  const regNumList = val.match(/\d+/g); //对逻辑码表的数字进行切分
+  if (regNumList) {
+    return regNumList.every(item => parseInt(item) < regColumns.value.length);
+  } else {
+    return true;
   }
 }
 
@@ -170,6 +235,8 @@ const regColumnSelect = ref();
 
 const onSubmit = async () => {
   stepper.value?.next();
+  regColumnSelect.value = null;
+  contentColumnSelect.value = null;
   contentColumns.value = await window.electronAPI.parseColumns(filePathForm.contentFilePath);
   regColumns.value = await window.electronAPI.parseColumns(filePathForm.regFilePath);
 }
@@ -204,6 +271,12 @@ const executeMatch = () => {
     contentColumnSelect: contentColumns.value.findIndex(value => contentColumnSelect.value === value),
     logicCode: logicCode.value,
     splitText: isSplit.value ? splitText.value : '',
+    isFilterUserName: isFilterUserName.value,
+    isFilterTopic: isFilterTopic.value,
+    isFilterSpecTopic: isFilterSpecTopic.value,
+    isCaseSensitive: isCaseSensitive.value,
+    isFilterEmoticon: isFilterEmoticon.value,
+    isFilterURL: isFilterURL.value,
   })
 }
 
