@@ -49,7 +49,7 @@ function matchTextItem(searchText: string, config: RegParseModel, regSheet: XLSX
         if (!regLogicMap.has(regNum)) {
           const regAddr = XLSX.utils.encode_col(Number.parseInt(regNum)) + XLSX.utils.encode_row(regRowStart);
           const regCell = regSheet[regAddr];
-          regLogicMap.set(regNum, new RegExp(regCell.v, config.isCaseSensitive ? 'i' : '').test(searchTextItem));
+          regLogicMap.set(regNum, new RegExp(regCell.v, config.isNotCaseSensitive ? 'i' : '').test(searchTextItem));
         }
       });
       const transformRegLogicCode = regStrList.map(regStr => {

@@ -79,8 +79,8 @@
             </template>
           </q-field>
           <q-toggle
-            v-model="isCaseSensitive"
-            label="区分大小写"
+            v-model="isNotCaseSensitive"
+            label="不区分大小写"
             color="green"
           />
           <q-toggle
@@ -176,7 +176,7 @@ const isSplit = ref(true);
 const isFilterUserName = ref(true);
 const isFilterTopic = ref(true);
 const isFilterSpecTopic = ref(false);
-const isCaseSensitive = ref(true);
+const isNotCaseSensitive = ref(true);
 const isFilterEmoticon = ref(true);
 const isFilterURL = ref(true);
 const splitText = ref('，');
@@ -274,7 +274,7 @@ const executeMatch = () => {
     isFilterUserName: isFilterUserName.value,
     isFilterTopic: isFilterTopic.value,
     isFilterSpecTopic: isFilterSpecTopic.value,
-    isCaseSensitive: isCaseSensitive.value,
+    isNotCaseSensitive: isNotCaseSensitive.value,
     isFilterEmoticon: isFilterEmoticon.value,
     isFilterURL: isFilterURL.value,
   })

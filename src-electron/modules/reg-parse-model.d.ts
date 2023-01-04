@@ -8,7 +8,7 @@ export interface RegParseModel {
   isFilterUserName: boolean,
   isFilterTopic: boolean,
   isFilterSpecTopic: boolean,
-  isCaseSensitive: boolean,
+  isNotCaseSensitive: boolean,
   isFilterEmoticon: boolean,
   isFilterURL: boolean,
 }
