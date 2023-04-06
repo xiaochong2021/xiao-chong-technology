@@ -118,8 +118,8 @@
           <q-input
             v-if="isSplit"
             v-model.trim="splitText"
-            label="分割字符"
-            hint="若为空，默认使用中文逗号"
+            label="分割字符(正则表达式)"
+            hint="若为空，默认使用，|。"
           />
           <q-input
             v-model.trim="logicCode"
@@ -179,7 +179,7 @@ const isFilterSpecTopic = ref(false);
 const isNotCaseSensitive = ref(true);
 const isFilterEmoticon = ref(true);
 const isFilterURL = ref(true);
-const splitText = ref('，');
+const splitText = ref('，|。');
 const logicCode = ref('');
 
 // 话题过滤器变换
@@ -270,7 +270,7 @@ const executeMatch = () => {
     regColumnSelect: regColumns.value.findIndex(value => regColumnSelect.value === value),
     contentColumnSelect: contentColumns.value.findIndex(value => contentColumnSelect.value === value),
     logicCode: logicCode.value,
-    splitText: isSplit.value ? splitText.value : '',
+    splitText: isSplit.value ? splitText.value || '，|。' : '',
     isFilterUserName: isFilterUserName.value,
     isFilterTopic: isFilterTopic.value,
     isFilterSpecTopic: isFilterSpecTopic.value,
