@@ -11,4 +11,5 @@ export interface RegParseModel {
   isNotCaseSensitive: boolean,
   isFilterEmoticon: boolean,
   isFilterURL: boolean,
+  isSearchText: boolean
 }

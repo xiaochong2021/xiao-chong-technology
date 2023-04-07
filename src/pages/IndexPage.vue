@@ -96,7 +96,7 @@
           <q-toggle
             v-model="isFilterUserName"
             label="剔除@用户名"
-            color="purple" l
+            color="purple"
           />
           <q-toggle
             v-model="isFilterTopic"
@@ -110,6 +110,11 @@
             color="red"
             @update:model-value="val => topicFilterChange(val, 'isFilterSpecTopic')"
           />
+          <q-toggle
+            v-model="isSearchText"
+            label="导出匹配文本"
+            color="black"
+          ></q-toggle>
           <q-toggle
             v-model="isSplit"
             label="启用分割字符"
@@ -181,6 +186,7 @@ const isFilterEmoticon = ref(true);
 const isFilterURL = ref(true);
 const splitText = ref('，|。');
 const logicCode = ref('');
+const isSearchText = ref(false);
 
 // 话题过滤器变换
 const topicFilterChange = (val:boolean, filed:string) => {
@@ -277,6 +283,7 @@ const executeMatch = () => {
     isNotCaseSensitive: isNotCaseSensitive.value,
     isFilterEmoticon: isFilterEmoticon.value,
     isFilterURL: isFilterURL.value,
+    isSearchText: isSearchText.value
   })
 }
 
