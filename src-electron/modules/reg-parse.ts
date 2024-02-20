@@ -219,7 +219,7 @@ export function postRenderMessage(messageWindow: BrowserWindow) {
       handleParse(event, config);
     }
     const notification = new Notification({
-      title: '晓蟲技术支持',
+      title: '文本智能识别工具',
       body: '批量正则匹配已完成，请到文本文件所在目录，查看匹配结果文件！',
       silent: true,
     });
